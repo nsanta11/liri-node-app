@@ -7,7 +7,13 @@ var Twitter = require('twitter');
 
 
 //Add the code required to import the keys.js file and store it in a variable.
+
 var keys = require("./keys.js");
+require.extensions['.txt'] = function (module, filename) {
+    module.exports = fs.readFileSync(filename, 'utf8');
+};
+
+//var doWhat = require("./random.txt");
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
@@ -18,10 +24,11 @@ movieName = "";
 songName = "";
 
 function omdb () {
-    if (!input){
-        process.argv[3] = "Mr. Nobody";
-        var input = process.argv[3];
-        }
+    console.log(input)
+//    if (!process.argv[3]){
+//        process.argv[3] = "Mr. Nobody";
+//        var input = process.argv[3];
+//        }
         for (var i = 0; i < input.length; i++) {
             if (input[i] === " ") {
                 movieName += "+"
@@ -69,17 +76,33 @@ else if (command==="my-tweets"){
     twit();
 }
 else if (command==="do-what-it-says"){
-    console.log("whatever");
+    doWhatItSays();
 }
+
 else {
     console.log("please enter a valid input!")
 }
 
+function doWhatItSays() {
+    fs.readFile("./random.txt", "utf8", function(error, data){
+        var txt = data.split(',');
+        command = txt[0];
+        console.log(command);
+        songName = txt[1];
+        console.log(songName);
+        spot();
+})
+}
+
 function spot() {
-    if (!input){
-        process.argv[3] = "The Sign Ace of Base";
-        var input = process.argv[3];
-    }
+    console.log(input)
+  //  if (!input){
+  //      process.argv[3] = "The Sign Ace of Base";
+  //      var input = process.argv[3];
+  //  }
+    // if (!input && command==="do-what-it-says"){
+    //     doWhatItSays();
+    // }
         for (var i = 0; i < input.length; i++) {
             if (input[i] === " ") {
                 songName += "+"
