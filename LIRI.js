@@ -18,15 +18,19 @@ movieName = "";
 songName = "";
 
 function omdb () {
-    for (var i = 0; i < input.length; i++) {
-        if (input[i] === " ") {
-            movieName += "+"
+    if (!input){
+        process.argv[3] = "Mr. Nobody";
+        var input = process.argv[3];
         }
-    else{
-        movieName += input[i];
+        for (var i = 0; i < input.length; i++) {
+            if (input[i] === " ") {
+                movieName += "+"
+            }
+            else {
+                movieName += input[i];
+            }
+
     }
-   
-}
     
 
 // Then run a request to the OMDB API with the movie specified
@@ -72,14 +76,19 @@ else {
 }
 
 function spot() {
-    for (var i = 0; i < input.length; i++) {
-        if (input[i] === " ") {
-            songName += "+"
-        }
-        else{
-        songName += input[i];
-        }
+    if (!input){
+        process.argv[3] = "The Sign Ace of Base";
+        var input = process.argv[3];
     }
+        for (var i = 0; i < input.length; i++) {
+            if (input[i] === " ") {
+                songName += "+"
+            }
+            else{
+            songName += input[i];
+            }
+    }
+    
 
     spotify.search({ type: 'track', query: songName }, function(err, data) {
         if (err) {
