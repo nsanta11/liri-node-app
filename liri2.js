@@ -1,17 +1,24 @@
 require("dotenv").config();
 
 var request = require("request");
+var fs = require("fs")
+var Spotify = require("node-spotify-api");
+var Twitter = require('twitter');
 
 
 //Add the code required to import the keys.js file and store it in a variable.
-var test = require("./LIRI.js").test;
+var keys = require("./LIRI.js");
 
-//var spotify = new Spotify(LIRI.2spotify);
-//var client = new Twitter(LIRI.twitter);
+var spotify = new Spotify(keys.spotify);
+var client = new Twitter(keys.twitter);
 
 // * `my-tweets`
 
 // * `spotify-this-song`
+// Artist(s)
+// The song's name
+// A preview link of the song from Spotify
+// The album that the song is from
 
 // * `movie-this`
 
@@ -21,6 +28,7 @@ var test = require("./LIRI.js").test;
 var command = process.argv[2];
 var input = process.argv[3];
 movieName = "";
+songName = "";
 
 // Create an empty variable for holding the movie name
 
@@ -28,21 +36,15 @@ movieName = "";
 
 // Loop through all the words in the node argument
 // And do a little for-loop magic to handle the inclusion of "+"s
-function ombd () {
-    console.log("working!")
-    for (var i = 3; i < input.length; i++) {
-
-    if (i > 3 && i < input.length) {
-
-        input = movieName + "+" + input[i];
-
-    }
-
-    else {
-
+function omdb () {
+    for (var i = 0; i < input.length; i++) {
+        if (input[i] === " ") {
+            movieName += "+"
+        }
+    else{
         movieName += input[i];
-
     }
+   
 }
     
 
@@ -59,22 +61,27 @@ request(queryUrl, function(error, response, body) {
 
     // Parse the body of the site and recover just the imdbRating
     // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-    console.log("Release Year: " + JSON.parse(body).Title);
+    console.log("Title: " + JSON.parse(body).Title);
     console.log("Release Year: " + JSON.parse(body).Year);
-    console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+    console.log("The movie's imdb rating is: " + JSON.parse(body).imdbRating);
+    console.log("The movie's rotten tomato rating is: " + JSON.parse(body).Ratings[1].Value);
+    console.log("Country: " + JSON.parse(body).Country);
+    console.log("Language: " + JSON.parse(body).Language);
+    console.log("Plot: " + JSON.parse(body).Plot);
+    console.log("Actors: " + JSON.parse(body).Actors);
   }
 
 });
-
+}
 
 if (command==="movie-this"){
     omdb();
 }
 else if (command==="spotify-this-song"){
-    spotify();
+    spot();
 }
 else if (command==="my-tweets"){
-    twitter();
+    twit();
 }
 else if (command==="do-what-it-says"){
     console.log("whatever");
@@ -83,8 +90,44 @@ else {
     console.log("please enter a valid input!")
 }
 
+function spot() {
+    for (var i = 0; i < input.length; i++) {
+        if (input[i] === " ") {
+            songName += "+"
+        }
+        else{
+        songName += input[i];
+        }
+    }
 
+    spotify.search({ type: 'track', query: songName }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+        
+      console.log(data.tracks.items[0].artists[0].name); 
+      console.log(data.tracks.items[0].name); 
+      console.log(data.tracks.items[0].preview_url); 
+      console.log(data.tracks.items[0].album.name);
+      
+    });
 }
+
+function twit() {
+var params = {screen_name: 'ToniHawk24', count: 20};
+client.get('statuses/user_timeline', params, function(error, tweets, response) {
+  if (!error) {
+    for (var i=0; i<20; i++) {
+    console.log(tweets[i].text + "\n");
+    }
+  }
+  else if (err) {
+    return console.log('Error occurred: ' + err);
+  }
+
+});
+}
+
 
 
 

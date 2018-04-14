@@ -19,6 +19,7 @@
   "homepage": "https://github.com/nsanta11/liri-node-app#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "node-fs": "^0.1.7",
     "node-spotify-api": "^1.0.7",
     "npm": "^5.8.0",
     "request": "^2.85.0",
