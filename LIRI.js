@@ -33,7 +33,7 @@ function omdb() {
             movieName += "+"
         }
         else {
-            movieName += inƒput[i];
+            movieName += input[i];
         }
 
     }
